@@ -16,9 +16,9 @@ let d = require('debug')('electron-spellchecker:dictionary-sync');
 const app = process.type === 'renderer' ?
   require('electron').remote.app :
   require('electron').app;
+const getCurrentWindow = require('electron').remote.getCurrentWindow;
 
-const {downloadFileOrUrl} =
-  require('electron-remote').requireTaskPool(require.resolve('electron-remote/remote-ajax'));
+const {download} = require('electron-dl');
 
 /**
  * DictioanrySync handles downloading and saving Hunspell dictionaries. Pass it
@@ -69,7 +69,8 @@ module.exports = class DictionarySync {
     if (process.platform === 'darwin') return new Buffer([]);
 
     let lang = normalizeLanguageCode(langCode);
-    let target = path.join(this.cacheDir, `${lang}.bdic`);
+    let filename = `${lang}.bdic`;
+    let target = path.join(this.cacheDir, filename);
 
     let fileExists = false;
     try {
@@ -100,7 +101,11 @@ module.exports = class DictionarySync {
 
     let url = getURLForHunspellDictionary(lang);
     d(`Actually downloading ${url}`);
-    await downloadFileOrUrl(url, target);
+    await download(getCurrentWindow(), url, { 
+      directory: this.cacheDir, 
+      filename: filename, 
+      showBadge: false
+    });
 
     if (cacheOnly) return target;
 
