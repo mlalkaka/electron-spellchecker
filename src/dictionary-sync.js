@@ -101,9 +101,10 @@ module.exports = class DictionarySync {
 
     let url = getURLForHunspellDictionary(lang);
     d(`Actually downloading ${url}`);
-    await download(getCurrentWindow(), url, { 
-      directory: this.cacheDir, 
-      filename: filename, 
+    await download(getCurrentWindow(), url, {
+      directory: this.cacheDir,
+      filename: filename,
+      saveAs: false,
       showBadge: false
     });
 
