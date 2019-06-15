@@ -116,4 +116,4 @@ module.exports = class DictionarySync {
     // NB: This is retained solely to not break earlier versions
     return Observable.of(true);
   }
-}
+};
