@@ -16,9 +16,12 @@ let d = require('debug')('electron-spellchecker:dictionary-sync');
 const app = process.type === 'renderer' ?
   require('electron').remote.app :
   require('electron').app;
-const getCurrentWindow = require('electron').remote.getCurrentWindow;
 
-const {download} = require('electron-dl');
+const { download } = process.type === 'renderer' ?
+  require('electron').remote.require('electron-dl') :
+  require('electron-dl');
+
+const getCurrentWindow = require('electron').remote.getCurrentWindow;
 
 /**
  * DictioanrySync handles downloading and saving Hunspell dictionaries. Pass it
